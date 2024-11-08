@@ -2,37 +2,25 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static Player Instance;
-    private PlayerMovement playerMovement;
-    private Animator animator;
+    private PlayerMovement movement;
+    private Animator engineAnimator;
 
-    private void Awake()
-    {
-        // Membuat instance Singleton untuk Player
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
+    // Initialize references
     private void Start()
     {
-        // Mengambil referensi dari komponen PlayerMovement dan Animator
-        playerMovement = GetComponent<PlayerMovement>();
-        animator = GetComponent<Animator>();
+        movement = GetComponent<PlayerMovement>();
+        engineAnimator = transform.Find("Engine/EngineEffect").GetComponent<Animator>();
     }
 
+    // Handle movement
     private void FixedUpdate()
     {
-        playerMovement.Move();
+        movement.ExecuteMove();
     }
 
+    // Update animation state
     private void LateUpdate()
     {
-        animator.SetBool("IsMoving", playerMovement.IsMoving());
+        engineAnimator.SetBool("IsMoving", movement.CheckIfMoving());
     }
 }
