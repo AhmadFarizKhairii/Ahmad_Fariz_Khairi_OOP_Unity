@@ -2,25 +2,60 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private PlayerMovement movement;
-    private Animator engineAnimator;
+    // This for getting the instace of Player Singleton
+    public static Player Instance { get; private set; }
 
-    // Initialize references
-    private void Start()
+    // Getting the PlayerMovement methods
+    PlayerMovement playerMovement;
+    // Animator
+    Animator animator;
+
+
+    // Key for Singleton
+    void Awake()
     {
-        movement = GetComponent<PlayerMovement>();
-        engineAnimator = transform.Find("Engine/EngineEffect").GetComponent<Animator>();
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+
+        Instance = this;
+
+        DontDestroyOnLoad(gameObject);
     }
 
-    // Handle movement
-    private void FixedUpdate()
+    // Getting Component
+    void Start()
     {
-        movement.ExecuteMove();
+        // Get PlayerMovement components
+        playerMovement = GetComponent<PlayerMovement>();
+
+        // Get Animator components
+        animator = GameObject.Find("EngineEffects").GetComponent<Animator>();
     }
 
-    // Update animation state
-    private void LateUpdate()
+    // Using FixedUpdate to Move because of physics
+    void FixedUpdate()
     {
-        engineAnimator.SetBool("IsMoving", movement.CheckIfMoving());
+        playerMovement.Move();
+    }
+
+    // LateUpdate for animation related
+    void LateUpdate()
+    {
+        playerMovement.MoveBound();
+        animator.SetBool("IsMoving", playerMovement.IsMoving());
+    }
+
+    private WeaponPickup currentWeaponPickup;
+
+    public void SwitchWeapon(Weapon newWeapon, WeaponPickup newWeaponPickup)
+    {
+        if (currentWeaponPickup != null)
+        {
+            currentWeaponPickup.PickupHandler(true);  // Make the previous weapon pickup visible again
+        }
+        currentWeaponPickup = newWeaponPickup;
     }
 }
