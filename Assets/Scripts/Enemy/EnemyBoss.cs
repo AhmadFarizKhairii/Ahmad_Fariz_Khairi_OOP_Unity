@@ -2,54 +2,43 @@ using UnityEngine;
 
 public class EnemyBoss : Enemy
 {
-    public GameObject bulletPrefab; // Assign bullet prefab in the Inspector
-    public Transform bulletSpawnPoint; // Assign spawn point in the Inspector
+    public Weapon bossWeapon;
+    public float attackInterval = 3f;
+    private float attackTimer;
+    public float speed = 5f;
+    private Vector2 direction;
 
-    private float shootInterval = 0.1f; // Set the shooting interval
-    private float shootTimer = 0f;
-
-    private float speed = 1f; // Slow speed for boss movement
-
-    private void Update()
+    protected override void Start()
     {
-        Move();
-        HandleShooting();
+        base.Start();
+        attackTimer = attackInterval;
+
+        float spawnSide = Random.Range(0, 2) == 0 ? -1f : 1f;
+        direction = new Vector2(spawnSide, 0);
+
+        transform.position = new Vector3(spawnSide * 10, Random.Range(-1f, 5f), 0);
+        rb.velocity = direction * speed;
     }
 
-    private void Move()
-    {
-        // Basic left-right movement (can adjust movement pattern as needed)
-        transform.Translate(Vector2.left * speed * Time.deltaTime);
-        if (transform.position.x < -5 || transform.position.x > 5) // Adjust boundaries for boss
+    private void Update(){
+        if (transform.position.x < -10 || transform.position.x > 10){
+            direction = -direction;
+            rb.velocity = direction * speed;
+        }
+
+        attackTimer -= Time.deltaTime;
+        if (attackTimer <= 0)
         {
-            speed = -speed;
+            Attack();
+            attackTimer = attackInterval;
         }
     }
 
-    private void HandleShooting()
+    private void Attack()
     {
-        shootTimer += Time.deltaTime;
-        if (shootTimer >= shootInterval)
+        if (bossWeapon != null)
         {
-            Shoot();
-            shootTimer = 0;
-        }
-    }
-
-    private void Shoot()
-    {
-        if (bulletPrefab != null && bulletSpawnPoint != null)
-        {
-            Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            // Damage player or apply other effects
-            Destroy(gameObject);  // Destroy or return to object pool
+            bossWeapon.Shoot();
         }
     }
 }

@@ -2,31 +2,38 @@ using UnityEngine;
 
 public class EnemyTargeting : Enemy
 {
-    private Transform player;
-    private float speed = 50f; // Set your desired speed
+    public Transform Player;
+    public float speed = 5f;
+    private Vector2 spawn;
+    void RandomizeSpawnPoint()
+    {
+        base.Start();
+
+        float spawnx = Random.Range(-9, 9);
+        float spawny = Random.Range(-6, 6);
+
+        transform.position = new Vector2(spawnx, spawny);
+    }
 
     protected override void Start()
     {
-        base.Start();
-        player = GameObject.FindWithTag("Player")?.transform;  // Ensure player has a "Player" tag
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
+        RandomizeSpawnPoint();
     }
-
     private void Update()
     {
-        if (player != null)
+        if (Player != null)
         {
-            // Move toward the player
-            Vector2 direction = (player.position - transform.position).normalized;
-            transform.Translate(direction * speed * Time.deltaTime);
+            Vector2 direction = (Player.position - transform.position).normalized;
+            rb.velocity = direction * speed;
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.CompareTag("Player"))
         {
-            // Damage player or apply other effects
-            Destroy(gameObject);  // Destroy or return to object pool
+            Destroy(gameObject);
         }
     }
 }
