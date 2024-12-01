@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/MainSceneUI.uss?fileID=7433441132597879392&amp;guid=1fdceb088c7ebb94dbda095214821551&amp;type=3#MainSceneUI" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:VisualElement style="flex-grow: 1;">
+            <ui:VisualElement style="flex-grow: 1; position: absolute; width: 154px; align-items: stretch; flex-direction: column; justify-content: space-between; top: 1px; left: 1px;">
+                <ui:Label tabindex="-1" text="Health : " parse-escape-sequences="true" display-tooltip-when-elided="true" name="Health" class="Health" style="color: rgb(255, 255, 255); width: auto;" />
+                <ui:Label tabindex="-1" text="&#10;&#10; Point : " parse-escape-sequences="true" display-tooltip-when-elided="true" name="Point" class="Point" style="color: rgb(255, 255, 255); height: auto;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; width: 136px; right: auto; position: absolute; top: 4px; left: 1016px; flex-direction: column; justify-content: space-between;">
+                <ui:Label tabindex="-1" text="Wave : " parse-escape-sequences="true" display-tooltip-when-elided="true" name="Wave" class="Wave" style="color: rgb(255, 255, 255);" />
+                <ui:Label tabindex="-1" text="Enemies Left : " parse-escape-sequences="true" display-tooltip-when-elided="true" name="EnemiesLeft" class="EnemiesLeft" style="color: rgb(255, 255, 255);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
